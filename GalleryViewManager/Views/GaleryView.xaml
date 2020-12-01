@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="GalleryViewManager.Views.GaleryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GalleryViewManager.Views"
+             xmlns:viewModels="clr-namespace:GalleryViewManager.Core.ViewModels"
+             x:Name="GaleryUserControl"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             DataContext="{Binding GaleryViewModel, Source={StaticResource ViewModelLocator}}"
+    mc:Ignorable="d">
+    <Grid Background="#FF31577E">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <TextBox Text="{Binding SearchedPhrase, UpdateSourceTrigger=PropertyChanged}" 
+                     MinWidth="200"/>
+            <Grid Background="White">
+                <Button Background="#FF5C99D6" Content="{materialDesign:PackIcon Kind=Search}" Command="{Binding LoadImages}"/>
+            </Grid>
+        </StackPanel>
+        <ListView Grid.Row="1" 
+                  x:Name="ImagesGalery"
+                  VerticalContentAlignment="Top"
+                  ScrollViewer.CanContentScroll="False"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ItemsSource="{Binding Images, UpdateSourceTrigger=PropertyChanged}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel></WrapPanel>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="Img" 
+                           Source="{Binding Image}" 
+                           MaxWidth="200" 
+                           Height="{Binding ActualWidth, RelativeSource= {RelativeSource Mode=Self}}"
+                           Stretch="Fill"
+                           MouseDown="Image_MouseDown"/>
+                        <Button Content="{materialDesign:PackIcon Kind=Favorite}" 
+                                VerticalAlignment="Top" 
+                                
+                                Command="{Binding ElementName=GaleryUserControl, Path=DataContext.SaveImageInStorage}" 
+                                CommandParameter="{Binding Source, ElementName=Img}"></Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>
